@@ -9,10 +9,6 @@ const table = document.querySelector('.field');
 appendRow.addEventListener('click', (e) => {
   const rows = [...document.querySelectorAll('tr')];
 
-  if (rows.length === 2) {
-    removeRow.disabled = false;
-  }
-
   if (rows.length < 10) {
     const newRow = document.createElement('tr');
     const columnAmount = getAmountColumns(rows);
@@ -26,35 +22,23 @@ appendRow.addEventListener('click', (e) => {
     table.append(newRow);
   }
 
-  if (rows.length === 9) {
-    appendRow.disabled = true;
-  }
+  updateButtonsState();
 });
 
 removeRow.addEventListener('click', (e) => {
   const rows = [...document.querySelectorAll('tr')];
-
-  if (rows.length === 10) {
-    appendRow.disabled = false;
-  }
 
   if (rows.length > 2) {
     rows.pop();
     table.replaceChildren(...rows);
   }
 
-  if (rows.length === 2) {
-    removeRow.disabled = true;
-  }
+  updateButtonsState();
 });
 
 appendColumn.addEventListener('click', (e) => {
   const rows = [...document.querySelectorAll('tr')];
   const columnAmount = getAmountColumns(rows);
-
-  if (columnAmount === 2) {
-    removeColumn.disabled = false;
-  }
 
   if (columnAmount < 10) {
     for (const row of rows) {
@@ -66,18 +50,12 @@ appendColumn.addEventListener('click', (e) => {
     table.replaceChildren(...rows);
   }
 
-  if (columnAmount === 9) {
-    appendColumn.disabled = true;
-  }
+  updateButtonsState();
 });
 
 removeColumn.addEventListener('click', (e) => {
   const rows = [...document.querySelectorAll('tr')];
   const columnAmount = getAmountColumns(rows);
-
-  if (columnAmount === 10) {
-    appendColumn.disabled = false;
-  }
 
   if (columnAmount > 2) {
     for (const row of rows) {
@@ -87,11 +65,46 @@ removeColumn.addEventListener('click', (e) => {
     table.replaceChildren(...rows);
   }
 
-  if (columnAmount === 3) {
-    removeColumn.disabled = true;
-  }
+  updateButtonsState();
 });
 
 function getAmountColumns(rows) {
   return rows[0].cells.length;
+}
+
+function updateButtonsState() {
+  const rows = [...document.querySelectorAll('tr')];
+  const columnAmount = getAmountColumns(rows);
+
+  if (rows.length >= 10) {
+    appendRow.disabled = true;
+  }
+
+  if (rows.length <= 2) {
+    removeRow.disabled = true;
+  }
+
+  if (rows.length < 10) {
+    appendRow.disabled = false;
+  }
+
+  if (rows.length > 2) {
+    removeRow.disabled = false;
+  }
+
+  if (columnAmount >= 10) {
+    appendColumn.disabled = true;
+  }
+
+  if (columnAmount <= 2) {
+    removeColumn.disabled = true;
+  }
+
+  if (columnAmount < 10) {
+    appendColumn.disabled = false;
+  }
+
+  if (columnAmount > 2) {
+    removeColumn.disabled = false;
+  }
 }
